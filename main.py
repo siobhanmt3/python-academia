@@ -1,6 +1,7 @@
 #Siobhan
 from pymongo import MongoClient
 
+#Base de datos
 MONGODB_URL = "mongodb://academia:academia@localhost:27017"
 
 def get_db():
@@ -14,6 +15,7 @@ def insert(items: list):
     for item in items:
         database.inventory.insert_one(item)
 
+#Imprimir por categoría
 def get(filter: dict):
     database = get_db()
 
@@ -21,6 +23,25 @@ def get(filter: dict):
         print(item)
 
 get(filter={"category": "Cocina"})
+
+#Eliminar por nombre
+def delete(filter: dict):
+    database = get_db()
+
+    result = database.inventory.delete_many(filter)
+    print(f"Se eliminaron {result.deleted_count} elementos")
+
+delete(filter={"name": "Tenedor"})
+
+#Actualizar por nombre
+def update(filter: dict, update: dict):
+    database = get_db()
+
+    result = database.inventory.update_many(filter, {"$set": update})
+    print(f"Se actualizaron {result.modified_count} elementos")
+
+update(filter={"name": "Cuchara"}, update={"price": 10})
+
 
 #insert([
 #    {
